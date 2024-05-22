@@ -56,7 +56,7 @@ uint8_t eepromDataReadBack[4];
 
 int I2CRead;
 uint8_t A[5];
-uint16_t JOY_RawRead[40]={0};
+uint16_t JOY_RawRead[20]={0};
 uint8_t header = 0x45;
 uint8_t header2 = 0x46;// Header byte
 uint8_t parityBit = 0; // Parity bit initialized to 0
@@ -120,10 +120,11 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   UARTInterruptConfig();
-  HAL_ADC_Start_DMA(&hadc1, JOY_RawRead, 40);
-  HAL_Delay(100);
+  HAL_ADC_Start_DMA(&hadc1, JOY_RawRead, 20);
+//  EEPROMWriteExample();
+  HAL_Delay(1000);
   EEPROMReadExample(eepromDataReadBack, 3);
-  HAL_Delay(100);
+  HAL_Delay(1000);
   High_Score  = eepromDataReadBack[0];
   /* USER CODE END 2 */
 
@@ -136,7 +137,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  	  EEPROMReadExample(eepromDataReadBack, 3);
 	  	  Score = (A[2]<< 8)+ A[1];
-	  	  if(High_Score < Score)
+	  	  if(High_Score < Score && Score < 30)
 	  	  {
 	  		High_Score = Score;
 	  		eepromExampleWriteFlag = 1;
@@ -458,8 +459,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 void EEPROMWriteExample() {
 if (eepromExampleWriteFlag && hi2c1.State == HAL_I2C_STATE_READY) {
-static uint8_t data[4] = { 0x00, 0x45, 0x55, 0xaa };
+static uint8_t data[4] = { 0x00, 0x02, 0x55, 0xaa };
 data[0] = High_Score;
+//data[0] = 5;
 HAL_I2C_Mem_Write_IT(&hi2c1, EEPROM_ADDR, 0x2C, I2C_MEMADD_SIZE_16BIT,data, 4);
 
 eepromExampleWriteFlag = 0;
@@ -470,6 +472,15 @@ if (eepromExampleReadFlag && hi2c1.State == HAL_I2C_STATE_READY) {
 HAL_I2C_Mem_Read_IT(&hi2c1, EEPROM_ADDR, 0x2c, I2C_MEMADD_SIZE_16BIT,Rdata, len);
 eepromExampleReadFlag = 0;
 }
+}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == GPIO_PIN_13)
+	{
+		eepromExampleWriteFlag = 1;
+		High_Score = 0;
+		EEPROMWriteExample();
+	}
 }
 /* USER CODE END 4 */
 

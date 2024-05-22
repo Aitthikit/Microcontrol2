@@ -1,10 +1,10 @@
-13:38:43 **** Incremental Build of configuration Debug for project LAB3_Game ****
+13:31:35 **** Incremental Build of configuration Debug for project LAB3_Game ****
 make -j12 all 
 arm-none-eabi-size  LAB3_Game.elf 
    text	   data	    bss	    dec	    hex	filename
-  33888	     20	   2320	  36228	   8d84	LAB3_Game.elf
+  33932	     20	   2280	  36232	   8d88	LAB3_Game.elf
 Finished building: default.size.stdout
  
 
-13:38:44 Build Finished. 0 errors, 0 warnings. (took 436ms)
+13:31:35 Build Finished. 0 errors, 0 warnings. (took 593ms)
 

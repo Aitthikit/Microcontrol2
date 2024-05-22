@@ -1,0 +1,10 @@
+22:42:06 **** Incremental Build of configuration Debug for project KalmanImprement ****
+make -j12 all 
+arm-none-eabi-size  KalmanImprement.elf 
+   text	   data	    bss	    dec	    hex	filename
+  28024	    100	   2336	  30460	   76fc	KalmanImprement.elf
+Finished building: default.size.stdout
+ 
+
+22:42:06 Build Finished. 0 errors, 0 warnings. (took 446ms)
+
